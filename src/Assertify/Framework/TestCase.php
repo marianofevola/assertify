@@ -4,25 +4,31 @@ namespace Assertify\Framework;
 
 use ReflectionClass;
 use ReflectionException;
+use \PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
-class TestCase extends \PHPUnit\Framework\TestCase
+class TestCase extends PHPUnitTestCase
 {
 
   /**
-   * Test a private/protected method
+   * Call protected/private method of a class.
    *
-   * @param $className
-   * @param $name
-   * @return \ReflectionMethod
-   * @throws \ReflectionException
+   * @param object &$object    Instantiated object that we will run method on.
+   * @param string $methodName Method name to call
+   * @param array  $parameters Array of parameters to pass into method.
+   *
+   * @return mixed Method return.
    */
-  protected function getMethod($className, $name)
+  public function invokeMethod(
+    &$object,
+    $methodName,
+    $parameters = []
+  )
   {
-    $class = new ReflectionClass($className);
-    $method = $class->getMethod($name);
+    $reflection = new \ReflectionClass(get_class($object));
+    $method = $reflection->getMethod($methodName);
     $method->setAccessible(true);
 
-    return $method;
+    return $method->invokeArgs($object, $parameters);
   }
 
   /**
@@ -38,5 +44,21 @@ class TestCase extends \PHPUnit\Framework\TestCase
     $properties = $class->getDefaultProperties();
 
     return $properties[$property];
+  }
+
+  /**
+   * Check whether an array has a certain index
+   *
+   * @param $index
+   * @param $array
+   * @param string $errorMessage
+   */
+  public function assertHasIndex($index, $array, $errorMessage = "")
+  {
+    return $this
+      ->assertTrue(
+        array_key_exists($index, $array),
+        $errorMessage
+      );
   }
 }
