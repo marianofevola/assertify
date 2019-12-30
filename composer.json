@@ -1,0 +1,15 @@
+{
+    "version": "1.0",
+    "type": "library",
+    "name": "marianofevola/assertify",
+    "description":"PHP testing tool easily shareable between different projects",
+    "autoload": {
+        "psr-0": {
+            "Assertify\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "phpunit/phpunit": "^5"
+    }
+}
